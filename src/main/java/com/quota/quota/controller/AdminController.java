@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin/quota")
+@RequestMapping("/api/admin/quota")
 public class AdminController {
     @Autowired
     private QuotaAdminService adminService;

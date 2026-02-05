@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/quota/transaction")
+@RequestMapping("/api/quota/transaction")
 public class TransactionController {
     @Autowired
     private TransactionService transactionService;

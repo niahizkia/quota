@@ -8,6 +8,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
@@ -29,38 +31,40 @@ public class RestSecurityConfiguration {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/api/**").csrf((request) -> request.disable())
                 .authorizeHttpRequests((request) -> request
                         .requestMatchers("/api/account/authenticate").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/category/**","/api/product**").hasAnyAuthority("Administrator", "Salesman")
-                        .requestMatchers(HttpMethod.PUT, "/api/category/**").hasAnyAuthority("Administrator", "Salesman")
-                        .requestMatchers(HttpMethod.PATCH, "/api/category/**").hasAnyAuthority("Administrator", "Salesman")
-                        .requestMatchers(HttpMethod.DELETE, "/api/category/**").hasAnyAuthority("Administrator", "Salesman")
-                        .requestMatchers(HttpMethod.GET, "/api/category/**").hasAnyAuthority("Administrator", "Salesman")
-                        .anyRequest().authenticated()
-                ).sessionManagement((session)->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                ).cors((request)-> request
-                        .configurationSource(corsConfigurationSource())
-                ).addFilterBefore(
-                        jwtRequestFilter, UsernamePasswordAuthenticationFilter.class
-                ).httpBasic((entry) ->  entry.authenticationEntryPoint(authenticationEntryPoint())
-                ).exceptionHandling((exception)->exception
-                        .accessDeniedHandler(accessDeniedHandler())
-                );
+                        .requestMatchers(HttpMethod.POST, "/api/category/**", "/api/product**")
+                        .hasAnyAuthority("Administrator", "Salesman")
+                        .requestMatchers(HttpMethod.PUT, "/api/category/**")
+                        .hasAnyAuthority("Administrator", "Salesman")
+                        .requestMatchers(HttpMethod.PATCH, "/api/category/**")
+                        .hasAnyAuthority("Administrator", "Salesman")
+                        .requestMatchers(HttpMethod.DELETE, "/api/category/**")
+                        .hasAnyAuthority("Administrator", "Salesman")
+                        .requestMatchers(HttpMethod.GET, "/api/category/**")
+                        .hasAnyAuthority("Administrator", "Salesman")
+                        .anyRequest().authenticated())
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors((request) -> request
+                        .configurationSource(corsConfigurationSource()))
+                .addFilterBefore(
+                        jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .httpBasic((entry) -> entry.authenticationEntryPoint(authenticationEntryPoint()))
+                .exceptionHandling((exception) -> exception
+                        .accessDeniedHandler(accessDeniedHandler()));
         return http.build();
     }
 
-
-
-    private AccessDeniedHandler accessDeniedHandler(){
+    private AccessDeniedHandler accessDeniedHandler() {
         return ((request, response, accessDeniedException) -> {
             response.setStatus(403);
             response.getWriter().write("Access denied");
         });
     }
 
-    private AuthenticationEntryPoint authenticationEntryPoint(){
+    private AuthenticationEntryPoint authenticationEntryPoint() {
         return ((request, response, accessDeniedException) -> {
             response.setStatus(401);
             response.getWriter().write("Unauthorized Request Header");
@@ -68,9 +72,15 @@ public class RestSecurityConfiguration {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
         var configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));  // perbolehkan semua domain masuk
+        configuration.setAllowedOrigins(List.of("*")); // perbolehkan semua domain masuk
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
         var source = new UrlBasedCorsConfigurationSource();

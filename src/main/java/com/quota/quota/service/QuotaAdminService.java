@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Service
 public class QuotaAdminService {
@@ -18,9 +19,8 @@ public class QuotaAdminService {
     @CachePut(value = "quota", key = "#request.id")
     public Quota createQuota(QuotaUpsertDTO request){
         Quota quota = new Quota();
-        quota.setQuotaId(request.getQuotaId());
         quota.setQuotaName(request.getQuotaName());
-        quota.setQuotaLimit(request.getQuotaLimit());
+        quota.setMaxLimit(request.getQuotaLimit());
         quota.setCreatedAt(OffsetDateTime.now());
 
         return quotaRepo.save(quota);
@@ -28,7 +28,7 @@ public class QuotaAdminService {
 
     // CRUD: Delete Setup Quota
     @CacheEvict(value = "quota", key = "#id")
-    public void deleteQuota(String id) {
+    public void deleteQuota(UUID id) {
         quotaRepo.deleteById(id);
     }
 }

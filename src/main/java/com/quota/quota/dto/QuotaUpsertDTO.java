@@ -16,10 +16,6 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class QuotaUpsertDTO {
 
-    @Size(max=20, message="Quota Id can't be no more than 20 characters.")
-    @NotBlank(message = "Quota Id can not be empty.")
-    private String quotaId;
-
     @Size(max=50, message="Quota Name can't be no more than 50 characters.")
     @NotBlank(message = "Quota Id can not be empty.")
     private String quotaName;

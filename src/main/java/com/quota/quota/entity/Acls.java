@@ -8,23 +8,27 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Entity
-@Table(name = "aclm")
+@Table(name = "acls")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Aclm implements Serializable {
-    @Id
-    @Column(name = "acl_id")
-    private String alcId;
+public class Acls extends BaseEntity {
+
+    @Column(name = "resource_name")
+    private String resourceName;
 
     @Column(name = "role_id")
-    private String roleId;
+    private UUID roleId;
 
-    @Column(name = "created_at")
-    private OffsetDateTime createdAt;
+    @Column(name = "can_read")
+    private Boolean canRead = false;
+
+    @Column(name = "can_write")
+    private Boolean canWrite = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", insertable = false, updatable = false)

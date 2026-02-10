@@ -9,41 +9,44 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Entity
-@Table(name = "quota_transaction")
+@Table(name = "transactions")
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class Transaction implements Serializable {
+public class Transaction  extends BaseEntity {
 
-    @Id
-    @Column(name = "tran_id", length = 20, nullable = false)
-    private String tranId;
-
-    @Column(name = "quota_id", length = 50, nullable = false)
-    private String quotaId;
+    @Column(name = "quota_id", nullable = false)
+    private UUID quotaId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quota_id", insertable = false, updatable = false)
-    private Quota quota;
+        private Quota quota;
+
+    @Column(name = "account_id", nullable = false)
+    private UUID accountId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", insertable = false, updatable = false)
+    private Account account;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private QuotaStatus status;
 
-    @Column(name = "taken_by")
-    private String takenBy;
-
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
-    public Transaction(String tranId, String quotaId, QuotaStatus status, String takenBy, OffsetDateTime createdAt){
-        this.tranId = tranId;
+    protected Transaction() {
+        super();
+    }
+    public Transaction( UUID quotaId, UUID accountId, QuotaStatus status, OffsetDateTime createdAt){
+//        super(tranId);
         this.quotaId = quotaId;
+        this.accountId = accountId;
         this.status = status;
-        this.takenBy = takenBy;
         this.createdAt = createdAt;
     }
 }

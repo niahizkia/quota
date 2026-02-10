@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -27,5 +29,5 @@ public class RegisterAccountDTO {
     private String passwordConfirmation;
 
     @NotBlank(message = "Role wajib diinput")
-    private String roleId;
+    private String roleName;
 }

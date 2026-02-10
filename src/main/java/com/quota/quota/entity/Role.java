@@ -6,22 +6,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "Role")
+@Table(name = "roles")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role implements Serializable {
-    @Id
-    @Column(name = "role_id")
-    private String roleId;
+public class Role extends BaseEntity {
 
-    @Column(name = "role_name")
+    @Column(name = "role_name", length = 50, unique = true, nullable = false)
     private String roleName;
+
+    private String description;
 
     @Column(name = "created_at")
     private String createdAt;
@@ -32,5 +30,5 @@ public class Role implements Serializable {
 
     //relationship: One Quota can have many Tran
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    private List<Aclm> aclms;
+    private List<Acls> acls;
 }

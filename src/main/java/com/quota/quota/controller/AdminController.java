@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/admin/quota")
 public class AdminController {
@@ -25,7 +27,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/setup/{id}")
-    public ResponseDTO deleteQuota(@PathVariable String id) {
+    public ResponseDTO deleteQuota(@PathVariable UUID id) {
         adminService.deleteQuota(id);
         ResponseDTO response = new ResponseDTO("00", "Success", "No content to display.");
         return response;

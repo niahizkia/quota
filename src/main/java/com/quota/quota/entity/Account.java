@@ -8,23 +8,22 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Table(name = "account")
+@Table(name = "accounts")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Account implements Serializable {
-    @Id
-    @Column(name = "username")
+public class Account extends BaseEntity {
+
     private String username;
 
-    @Column(name="password")
     private String password;
 
     @Column(name = "role_id")
-    private String roleId;
+    private UUID roleId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", insertable = false, updatable = false)

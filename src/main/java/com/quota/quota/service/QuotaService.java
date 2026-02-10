@@ -1,47 +1,43 @@
 package com.quota.quota.service;
 
+import com.quota.quota.component.ResourceNotFoundException;
 import com.quota.quota.dto.QuotaSummaryDTO;
-import com.quota.quota.dto.TransactionDetailDTO;
 import com.quota.quota.entity.Quota;
 import com.quota.quota.repository.QuotaRepository;
 import com.quota.quota.repository.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.time.Period;
-import java.util.List;
+import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class QuotaService {
-    @Autowired
-    private QuotaRepository quotaRepository;
-    @Autowired
-    private TransactionRepository transactionRepository;
-    public QuotaSummaryDTO getQuotaDetails(String idQuota) {
-        Quota quota = quotaRepository.findById(idQuota)
-                .orElseThrow(() -> new RuntimeException("Data Not Found"));
-        int sisaQuota = getAvailableQuota(idQuota);
+
+    private final QuotaRepository quotaRepository;
+    private final TransactionRepository transactionRepository;
+
+    public QuotaSummaryDTO getQuotaDetails(UUID quotaId) {
+        Quota quota = quotaRepository.findById(quotaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Data Not Found"));
+        int sisaQuota = getAvailableQuota(quotaId);
         return new QuotaSummaryDTO(
                 quota.getQuotaName(),
                 quota.getCreatedAt(),
-                sisaQuota
-        );
+                sisaQuota);
     }
 
-    public Integer getAvailableQuota(String idQuota){
-        Quota quota = quotaRepository.findById(idQuota)
-                .orElseThrow(() -> new RuntimeException("Data Not Found"));
-        int totalReservedQuota = quotaRepository.getTotalReservedQuota(idQuota);
-        return quota.getQuotaLimit() - totalReservedQuota;
+    public Integer getAvailableQuota(UUID quotaId) {
+
+        Quota quota = quotaRepository.findById(quotaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Data Not Found"));
+        int totalReservedQuota = quotaRepository.getTotalReservedQuota(quota.getId());
+        return quota.getMaxLimit() - totalReservedQuota;
     }
 
-    public Object getAllTranByQuotaId(String quotaId){
+    public Object getAllTranByQuotaId(UUID quotaId) {
+        Quota quota = quotaRepository.findById(quotaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Data Not Found"));
         var rows = transactionRepository.getTranByQuotaId(quotaId);
         return rows;
     }

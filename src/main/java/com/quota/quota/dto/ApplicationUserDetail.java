@@ -18,7 +18,7 @@ public class ApplicationUserDetail implements UserDetails {
     public ApplicationUserDetail(Account account) {
         this.username = account.getUsername();
         this.password = account.getPassword();
-        this.authorities.add(new SimpleGrantedAuthority(account.getRole().getRoleId()));    // kalo misalnya authority / role nya lebih dari satu
+        this.authorities.add(new SimpleGrantedAuthority(account.getRoleId().toString()));    // kalo misalnya authority / role nya lebih dari satu
     }
 
     @Override

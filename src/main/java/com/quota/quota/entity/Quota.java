@@ -12,22 +12,18 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "quota_master")
+@Table(name = "quotas")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Quota implements Serializable {
+public class Quota extends BaseEntity {
 
-    @Id
-    @Column(name = "quota_id", length = 20, nullable = false)
-    private String quotaId;
-
-    @Column(name = "quota_name", length = 50, nullable = false)
+    @Column(name = "quota_name", length = 100, nullable = false)
     private String quotaName;
 
-    @Column(name = "quota_limit")
-    private Integer quotaLimit;
+    @Column(name = "max_limit")
+    private Integer maxLimit;
 
     @Column(name = "created_at")
     private OffsetDateTime createdAt;

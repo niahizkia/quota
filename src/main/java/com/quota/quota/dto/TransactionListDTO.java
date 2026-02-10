@@ -1,10 +1,6 @@
 package com.quota.quota.dto;
 
 import com.quota.quota.constant.QuotaStatus;
-import com.quota.quota.entity.Quota;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,9 +13,10 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionDetailDTO {
+public class TransactionListDTO {
+    private UUID tranId;
+    private UUID quotaId;
     private String quotaName;
     private QuotaStatus status;
     private OffsetDateTime createdAt;
-
 }

@@ -1,14 +1,13 @@
 package com.quota.quota.controller;
 
 import com.quota.quota.dto.*;
-import com.quota.quota.entity.Quota;
 import com.quota.quota.entity.Transaction;
 import com.quota.quota.service.QuotaService;
 import com.quota.quota.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/quota/transaction")
@@ -18,14 +17,14 @@ public class TransactionController {
     @Autowired
     private QuotaService quotaService;
 
-    @GetMapping("/{tranId}")
-    public ResponseDTO getTranById(@PathVariable String tranId) {
-        ResponseDTO response = new ResponseDTO("00", "Success", transactionService.getTranDetails(tranId));
+    @GetMapping("/{userId}")
+    public ResponseDTO getTranByUser(@PathVariable UUID userId) {
+        ResponseDTO response = new ResponseDTO("00", "Success", transactionService.getUserTranDetails(userId));
         return response;
     }
 
     @PostMapping("/create")
-    public ResponseDTO createTransaction(@RequestBody TransactionDTO request) {
+    public ResponseDTO createTransaction(@RequestBody TransactionCreateDTO request) {
         Integer quotaAvailable = quotaService.getAvailableQuota(request.getQuotaId());
         if (quotaAvailable >= 1) {
             ResponseDTO response = new ResponseDTO("00", "Success", request);
@@ -37,9 +36,9 @@ public class TransactionController {
         }
 //        return ResponseEntity.status(HttpStatus.CREATED).body(savedTransaction);
     }
-    @DeleteMapping("/{id}")
-    public ResponseDTO deleteTransaction(@PathVariable String id) {
-        transactionService.deleteTransaction(id);
-        return new ResponseDTO("00", "Success", "No content to display.");
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseDTO deleteTransaction(@PathVariable String id) {
+//        transactionService.deleteTransaction(id);
+//        return new ResponseDTO("00", "Success", "No content to display.");
+//    }
 }

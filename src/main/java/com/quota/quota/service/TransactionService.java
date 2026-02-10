@@ -10,7 +10,6 @@ import com.quota.quota.repository.QuotaRepository;
 import com.quota.quota.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -26,7 +25,7 @@ public class TransactionService {
     @Autowired
     private QuotaRepository quotaRepo;
 
-    public UserTransactionDTO getUserTranDetails(UUID aacountId) {
+    public AccountTransactionDTO getUserTranDetails(UUID aacountId) {
 
         Account account = accountRepo.findById(aacountId)
                 .orElseThrow(() -> new RuntimeException("Account Not Found"));
@@ -34,8 +33,8 @@ public class TransactionService {
         if (transactions.isEmpty()) {
             throw new RuntimeException("No transactions found for this account");
         }
-        UserInformationDTO userInfo = new UserInformationDTO(account.getId(), account.getUsername());
-        return new UserTransactionDTO(
+        AccountInformationDTO userInfo = new AccountInformationDTO(account.getId(), account.getUsername());
+        return new AccountTransactionDTO(
                 userInfo, transactions
         );
     }

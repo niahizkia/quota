@@ -5,13 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInformationDTO {
-    private UUID userId;
-    private String userName;
+public class AccountTransactionDTO {
+    private AccountInformationDTO userInfo;
+    private Object tranList;
 }
